@@ -1,65 +1,91 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React from "react";
+import styles from "../styles/Home.module.css";
+import DeckGL from "@deck.gl/react";
+import { StaticMap } from "react-map-gl";
+import { HexagonLayer } from "@deck.gl/aggregation-layers";
+import { LightingEffect, PointLight } from "@deck.gl/core";
+import * as d3 from "d3";
 
-export default function Home() {
+const INITIAL_VIEW_STATE = {
+  longitude: -1.4157,
+  latitude: 52.2324,
+  zoom: 7,
+  pitch: 42,
+  bearing: 0,
+};
+
+const DATA_URL =
+  "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv";
+
+const LIGHT_SETTINGS = {
+  lightsPosition: [-0.144528, 49.739968, 8000, -3.807751, 54.104682, 8000],
+  ambientRatio: 0.4,
+  diffuseRatio: 0.6,
+  specularRatio: 0.2,
+  lightsStrength: [0.8, 0.0, 0.8, 0.0],
+  numberOfLights: 2,
+};
+
+const COLOR_RANGE = [
+  [1, 152, 189],
+  [73, 227, 206],
+  [216, 254, 181],
+  [254, 237, 177],
+  [254, 173, 84],
+  [209, 55, 78],
+];
+
+export default function Home({ MAPBOX_ACCESS_TOKEN }) {
+  const light1 = new PointLight({
+    color: [255, 255, 255],
+    intensity: 1,
+    position: [0, 0, 200],
+  });
+  const light2 = new PointLight({
+    color: [255, 255, 255],
+    intensity: 1,
+    position: [0, 0, 200],
+  });
+
+  const lightingEffect = new LightingEffect({
+    light1,
+    light2,
+  });
+
+  const hexLayer = new HexagonLayer({
+    id: "heatmap",
+    data: d3.csv(DATA_URL),
+    radius: 500,
+    coverage: 1,
+    upperPercentile: 100,
+    colorRange: COLOR_RANGE,
+    elevationRange: [0, 1000],
+    elevationScale: 220,
+    extruded: true,
+    getPosition: (d) => [Number(d.lng), Number(d.lat)],
+    opacity: 1,
+  });
+
+  const layers = [hexLayer];
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <DeckGL
+      initialViewState={INITIAL_VIEW_STATE}
+      controller={true}
+      layers={layers}
+      glOptions={{ stencil: true }}
+      effects={[lightingEffect]}
+    >
+      <StaticMap
+        mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+        mapStyle="mapbox://styles/mapbox/dark-v9"
+      />
+    </DeckGL>
+  );
+}
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+export async function getStaticProps() {
+  const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN;
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+  return { props: { MAPBOX_ACCESS_TOKEN }, revalidate: 30 };
 }
