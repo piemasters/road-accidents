@@ -4,7 +4,7 @@ import DeckGL from "@deck.gl/react";
 import { StaticMap } from "react-map-gl";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import { LightingEffect, PointLight } from "@deck.gl/core";
-import * as d3 from "d3";
+import axios from "axios";
 
 const INITIAL_VIEW_STATE = {
   longitude: -1.4157,
@@ -14,16 +14,17 @@ const INITIAL_VIEW_STATE = {
   bearing: 0,
 };
 
-const DATA_URL =
-  "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv";
-
-const LIGHT_SETTINGS = {
-  lightsPosition: [-0.144528, 49.739968, 8000, -3.807751, 54.104682, 8000],
-  ambientRatio: 0.4,
-  diffuseRatio: 0.6,
-  specularRatio: 0.2,
-  lightsStrength: [0.8, 0.0, 0.8, 0.0],
-  numberOfLights: 2,
+const LIGHTS = {
+  light0: new PointLight({
+    color: [255, 255, 255],
+    intensity: 1,
+    position: [0, 0, 200],
+  }),
+  light1: new PointLight({
+    color: [255, 255, 255],
+    intensity: 1,
+    position: [0, 0, 200],
+  }),
 };
 
 const COLOR_RANGE = [
@@ -35,26 +36,12 @@ const COLOR_RANGE = [
   [209, 55, 78],
 ];
 
-export default function Home({ MAPBOX_ACCESS_TOKEN }) {
-  const light1 = new PointLight({
-    color: [255, 255, 255],
-    intensity: 1,
-    position: [0, 0, 200],
-  });
-  const light2 = new PointLight({
-    color: [255, 255, 255],
-    intensity: 1,
-    position: [0, 0, 200],
-  });
-
-  const lightingEffect = new LightingEffect({
-    light1,
-    light2,
-  });
+export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
+  const lightingEffect = new LightingEffect(LIGHTS);
 
   const hexLayer = new HexagonLayer({
     id: "heatmap",
-    data: d3.csv(DATA_URL),
+    data: data,
     radius: 500,
     coverage: 1,
     upperPercentile: 100,
@@ -66,13 +53,11 @@ export default function Home({ MAPBOX_ACCESS_TOKEN }) {
     opacity: 1,
   });
 
-  const layers = [hexLayer];
-
   return (
     <DeckGL
       initialViewState={INITIAL_VIEW_STATE}
       controller={true}
-      layers={layers}
+      layers={[hexLayer]}
       glOptions={{ stencil: true }}
       effects={[lightingEffect]}
     >
@@ -84,8 +69,10 @@ export default function Home({ MAPBOX_ACCESS_TOKEN }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN;
 
-  return { props: { MAPBOX_ACCESS_TOKEN }, revalidate: 30 };
+  const { data } = await axios.get(`${process.env.API_URL}/traffic`);
+
+  return { props: { MAPBOX_ACCESS_TOKEN, data } };
 }
