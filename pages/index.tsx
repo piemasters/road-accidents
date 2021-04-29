@@ -4,7 +4,7 @@ import DeckGL from "@deck.gl/react";
 import { StaticMap } from "react-map-gl";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import { LightingEffect, PointLight } from "@deck.gl/core";
-import axios from "axios";
+import loadCSV from "../util/LoadCSV";
 
 const INITIAL_VIEW_STATE = {
   longitude: -1.4157,
@@ -69,10 +69,10 @@ export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const MAPBOX_ACCESS_TOKEN = process.env.MAPBOX_ACCESS_TOKEN;
 
-  const { data } = await axios.get(`${process.env.API_URL}/traffic`);
+  const data = await loadCSV("traffic-accident-heatmap.csv");
 
   return { props: { MAPBOX_ACCESS_TOKEN, data } };
 }
