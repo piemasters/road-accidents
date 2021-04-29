@@ -4,7 +4,7 @@ const fs = require("fs");
 export default async (req, res) => {
   const results = [];
 
-  fs.createReadStream("./data/traffic-accident-heatmap.csv")
+  fs.createReadStream("./traffic-accident-heatmap.csv")
     .pipe(csv())
     .on("data", (data) => results.push(data))
     .on("end", () => {
