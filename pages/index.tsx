@@ -1,10 +1,11 @@
-import React from "react";
-import styles from "../styles/Home.module.css";
+import React, { useState } from "react";
 import DeckGL from "@deck.gl/react";
 import { StaticMap } from "react-map-gl";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
-import { LightingEffect, PointLight } from "@deck.gl/core";
+import { LightingEffect, PointLight, DirectionalLight } from "@deck.gl/core";
+import "tailwindcss/tailwind.css";
 import loadCSV from "../util/LoadCSV";
+import Head from "next/head";
 
 const INITIAL_VIEW_STATE = {
   longitude: -1.4157,
@@ -15,15 +16,15 @@ const INITIAL_VIEW_STATE = {
 };
 
 const LIGHTS = {
-  light0: new PointLight({
+  light0: new DirectionalLight({
     color: [255, 255, 255],
-    intensity: 1,
-    position: [0, 0, 200],
+    intensity: 2,
+    position: [0, 0, 1000],
   }),
   light1: new PointLight({
     color: [255, 255, 255],
-    intensity: 1,
-    position: [0, 0, 200],
+    intensity: 2,
+    position: [0, 0, 1000],
   }),
 };
 
@@ -37,35 +38,109 @@ const COLOR_RANGE = [
 ];
 
 export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
+  const [radius, setRadius] = useState(500);
+  const [opacity, setOpacity] = useState(1);
+  const [upperPercentile, setUpperPercentile] = useState(100);
+
   const lightingEffect = new LightingEffect(LIGHTS);
 
   const hexLayer = new HexagonLayer({
     id: "heatmap",
     data: data,
-    radius: 500,
+    radius: radius,
     coverage: 1,
-    upperPercentile: 100,
+    upperPercentile: upperPercentile,
     colorRange: COLOR_RANGE,
     elevationRange: [0, 1000],
     elevationScale: 220,
     extruded: true,
     getPosition: (d) => [Number(d.lng), Number(d.lat)],
-    opacity: 1,
+    opacity: opacity,
   });
 
+  const handleRadiusChange = (event) => {
+    setRadius(event.target.value);
+  };
+  const handleOpacityChange = (event) => {
+    setOpacity(event.target.value);
+  };
+  const handleUpperPercentileChange = (event) => {
+    setUpperPercentile(event.target.value);
+  };
+
   return (
-    <DeckGL
-      initialViewState={INITIAL_VIEW_STATE}
-      controller={true}
-      layers={[hexLayer]}
-      glOptions={{ stencil: true }}
-      effects={[lightingEffect]}
-    >
-      <StaticMap
-        mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
-        mapStyle="mapbox://styles/mapbox/dark-v9"
-      />
-    </DeckGL>
+    <>
+      <Head>
+        <title>Road Accidents</title>
+        <link rel="icon" href="/favicon.ico" />
+        <link
+          href="https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css"
+          rel="stylesheet"
+        />
+      </Head>
+      <div className="bg-white opacity-70 absolute top-12 right-0 z-10 hover:opacity-100">
+        <div className="m-4">
+          <label className="flex align-middle">
+            <input
+              id="radius"
+              type="range"
+              min="500"
+              max="20000"
+              step="1000"
+              value={radius}
+              onChange={handleRadiusChange}
+            />
+            <div className="inline-block ml-2 font-medium text-gray-800">
+              Radius
+            </div>
+          </label>
+        </div>
+        <div className="m-4">
+          <label className="flex align-middle">
+            <input
+              id="coverage"
+              type="range"
+              min="0"
+              max="1"
+              step="0.1"
+              value={opacity}
+              onChange={handleOpacityChange}
+            />
+            <div className="inline-block ml-2 font-medium text-gray-800">
+              Opacity
+            </div>
+          </label>
+        </div>
+        <div className="m-4">
+          <label className="flex align-middle">
+            <input
+              id="upper-pecentile"
+              type="range"
+              min="90"
+              max="100"
+              step="1"
+              value={upperPercentile}
+              onChange={handleUpperPercentileChange}
+            />{" "}
+            <div className="inline-block ml-2 font-medium text-gray-800">
+              Upper Percentile
+            </div>
+          </label>
+        </div>
+      </div>
+      <DeckGL
+        initialViewState={INITIAL_VIEW_STATE}
+        controller={true}
+        layers={[hexLayer]}
+        glOptions={{ stencil: true }}
+        effects={[lightingEffect]}
+      >
+        <StaticMap
+          mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
+          mapStyle="mapbox://styles/mapbox/dark-v9"
+        />
+      </DeckGL>
+    </>
   );
 }
 
