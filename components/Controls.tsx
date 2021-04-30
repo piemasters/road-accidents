@@ -10,7 +10,7 @@ const Controls = ({
 }) => {
   return (
     <div className="bg-white opacity-70 absolute top-12 right-0 z-10 hover:opacity-100">
-      <div className="m-4 font-bold">Great Britain Traffic Accidents</div>
+      <div className="m-4 font-bold">Great Britain Road Accidents</div>
       <div className="m-4">
         <label className="flex align-middle">
           <input
