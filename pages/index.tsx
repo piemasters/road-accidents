@@ -6,7 +6,7 @@ import Map from "../components/Map";
 import Controls from "../components/Controls";
 
 export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
-  const [radius, setRadius] = useState(600);
+  const [radius, setRadius] = useState(1000);
   const [opacity, setOpacity] = useState(1);
   const [upperPercentile, setUpperPercentile] = useState(100);
 
@@ -37,6 +37,7 @@ export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
         handleOpacityChange={handleOpacityChange}
         upperPercentile={upperPercentile}
         handleUpperPercentileChange={handleUpperPercentileChange}
+        accidentsTotal={data.length}
       />
       <Map
         data={data}
