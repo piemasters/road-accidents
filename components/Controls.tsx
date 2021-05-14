@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { COLOR_RANGE } from "../data/colors";
 
 const Controls = ({
@@ -10,6 +10,10 @@ const Controls = ({
   handleUpperPercentileChange,
   accidentsTotal,
 }) => {
+  const [showRadius, setShowRadius] = useState(false);
+  const [showOpacity, setShowOpacity] = useState(false);
+  const [showPercentile, setShowPercentile] = useState(false);
+
   return (
     <div className="bg-white absolute top-12 right-0 z-10 w-96 p-4 hidden md:block">
       <h1 className="text-xl font-medium mb-4">Great Britain Road Accidents</h1>
@@ -60,8 +64,13 @@ const Controls = ({
         </div>
       </div>
 
-      <div className="mt-4">
-        <label className="flex align-middle">
+      <div className="mt-6">
+        <label className="flex align-middle relative">
+          {showRadius && (
+            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+              {radius}
+            </div>
+          )}
           <input
             id="radius"
             type="range"
@@ -70,14 +79,21 @@ const Controls = ({
             step="200"
             value={radius}
             onChange={handleRadiusChange}
+            onMouseEnter={() => setShowRadius(true)}
+            onMouseLeave={() => setShowRadius(false)}
           />
           <div className="inline-block ml-2 font-medium text-gray-800">
             Radius
           </div>
         </label>
       </div>
-      <div className="">
-        <label className="flex align-middle">
+      <div className="mt-4">
+        <label className="flex align-middle relative">
+          {showOpacity && (
+            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+              {opacity}
+            </div>
+          )}
           <input
             id="coverage"
             type="range"
@@ -86,14 +102,21 @@ const Controls = ({
             step="0.1"
             value={opacity}
             onChange={handleOpacityChange}
+            onMouseEnter={() => setShowOpacity(true)}
+            onMouseLeave={() => setShowOpacity(false)}
           />
           <div className="inline-block ml-2 font-medium text-gray-800">
             Opacity
           </div>
         </label>
       </div>
-      <div className="">
-        <label className="flex align-middle">
+      <div className="mt-4">
+        <label className="flex align-middle relative">
+          {showPercentile && (
+            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+              {upperPercentile}
+            </div>
+          )}
           <input
             id="upper-pecentile"
             type="range"
@@ -102,6 +125,8 @@ const Controls = ({
             step="1"
             value={upperPercentile}
             onChange={handleUpperPercentileChange}
+            onMouseEnter={() => setShowPercentile(true)}
+            onMouseLeave={() => setShowPercentile(false)}
           />{" "}
           <div className="inline-block ml-2 font-medium text-gray-800">
             Upper Percentile

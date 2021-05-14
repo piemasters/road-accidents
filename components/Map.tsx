@@ -1,6 +1,6 @@
 import "tailwindcss/tailwind.css";
 import { StaticMap } from "react-map-gl";
-import React from "react";
+import React, { useState } from "react";
 import { LightingEffect, PointLight, AmbientLight } from "@deck.gl/core";
 import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import DeckGL from "@deck.gl/react";
@@ -10,8 +10,8 @@ const INITIAL_VIEW_STATE = {
   longitude: -1.4157,
   latitude: 52.2324,
   zoom: 7,
-  pitch: 42,
-  bearing: 0,
+  pitch: 50,
+  bearing: -10,
 };
 
 const ambientLight = new AmbientLight({
@@ -65,6 +65,8 @@ const Map = ({
     pointLight2,
   });
 
+  const [elevationScale, setElevationScale] = useState(0);
+
   const hexLayer = new HexagonLayer({
     id: "heatmap",
     data: data,
@@ -73,16 +75,28 @@ const Map = ({
     upperPercentile: upperPercentile,
     colorRange: COLOR_RANGE,
     elevationRange: [0, 1000],
-    elevationScale: 220,
+    elevationScale: elevationScale,
     extruded: true,
     getPosition: (d) => [Number(d.lng), Number(d.lat)],
     opacity: opacity,
     material,
     pickable: true,
     transitions: {
-      elevationScale: 3000,
+      elevationScale: {
+        type: "spring",
+        stiffness: 0.01,
+        damping: 0.5,
+      },
     },
   });
+
+  const handleElevationChange = () => {
+    setElevationScale(220);
+  };
+
+  setTimeout(function () {
+    handleElevationChange();
+  }, 100);
 
   return (
     <DeckGL
