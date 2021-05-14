@@ -111,6 +111,7 @@ const Map = ({
         mapboxApiAccessToken={MAPBOX_ACCESS_TOKEN}
         mapStyle="mapbox://styles/mapbox/dark-v9"
         preventStyleDiffing={true}
+        attributionControl={false}
       />
     </DeckGL>
   );
