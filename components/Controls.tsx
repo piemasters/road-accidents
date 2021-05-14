@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { COLOR_RANGE } from "../data/colors";
 
 const Controls = ({
@@ -14,8 +15,19 @@ const Controls = ({
   const [showOpacity, setShowOpacity] = useState(false);
   const [showPercentile, setShowPercentile] = useState(false);
 
+  const variants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 0.8, transition: { duration: 2 } },
+  };
+
   return (
-    <div className="bg-white absolute top-12 right-0 z-10 w-96 p-4 hidden md:block">
+    <motion.div
+      className="bg-white absolute top-12 right-0 z-10 w-96 p-4 hidden md:block"
+      initial="hidden"
+      animate="visible"
+      variants={variants}
+      whileHover={{ opacity: 1 }}
+    >
       <h1 className="text-xl font-medium mb-4">Great Britain Road Accidents</h1>
       <p className="text-md font-light mb-2">
         Personal injury road accidents in GB from 1979
@@ -133,7 +145,7 @@ const Controls = ({
           </div>
         </label>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
