@@ -22,11 +22,12 @@ const Controls = ({
 
   return (
     <motion.div
-      className="hidden absolute top-0 right-0 z-10 p-2 w-64 bg-white lg:top-12 lg:w-96 lg:p-4 md:block"
+      className="hidden overflow-auto absolute top-0 right-0 z-10 p-2 w-64 h-full max-h-96 bg-white lg:top-0 lg:w-96 lg:p-4 md:block lg:h-auto lg:max-h-full lg:m-6"
       initial="hidden"
       animate="visible"
       variants={variants}
       whileHover={{ opacity: 1 }}
+      whileTap={{ opacity: 2 }}
     >
       <h1 className="mb-4 font-medium text-md lg:text-xl">
         Great Britain Road Accidents

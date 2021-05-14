@@ -30,22 +30,24 @@ export default function Home({ MAPBOX_ACCESS_TOKEN, data }) {
           rel="stylesheet"
         />
       </Head>
-      <Controls
-        radius={radius}
-        handleRadiusChange={handleRadiusChange}
-        opacity={opacity}
-        handleOpacityChange={handleOpacityChange}
-        upperPercentile={upperPercentile}
-        handleUpperPercentileChange={handleUpperPercentileChange}
-        accidentsTotal={data.length}
-      />
-      <Map
-        data={data}
-        opacity={opacity}
-        radius={radius}
-        MAPBOX_ACCESS_TOKEN={MAPBOX_ACCESS_TOKEN}
-        upperPercentile={upperPercentile}
-      />
+      <div className="overflow-hidden relative h-screen max-h-screen">
+        <Controls
+          radius={radius}
+          handleRadiusChange={handleRadiusChange}
+          opacity={opacity}
+          handleOpacityChange={handleOpacityChange}
+          upperPercentile={upperPercentile}
+          handleUpperPercentileChange={handleUpperPercentileChange}
+          accidentsTotal={data.length}
+        />
+        <Map
+          data={data}
+          opacity={opacity}
+          radius={radius}
+          MAPBOX_ACCESS_TOKEN={MAPBOX_ACCESS_TOKEN}
+          upperPercentile={upperPercentile}
+        />
+      </div>
     </>
   );
 }
