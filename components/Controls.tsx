@@ -22,17 +22,19 @@ const Controls = ({
 
   return (
     <motion.div
-      className="bg-white absolute top-12 right-0 z-10 w-96 p-4 hidden md:block"
+      className="hidden absolute top-0 right-0 z-10 p-2 w-64 bg-white lg:top-12 lg:w-96 lg:p-4 md:block"
       initial="hidden"
       animate="visible"
       variants={variants}
       whileHover={{ opacity: 1 }}
     >
-      <h1 className="text-xl font-medium mb-4">Great Britain Road Accidents</h1>
-      <p className="text-md font-light mb-2">
+      <h1 className="mb-4 font-medium text-md lg:text-xl">
+        Great Britain Road Accidents
+      </h1>
+      <p className="mb-2 text-sm font-light lg:text-md">
         Personal injury road accidents in GB from 1979
       </p>
-      <p className="text-md font-light mb-4">
+      <p className="mb-4 text-sm font-light lg:text-md">
         The layer aggregates data within the boundary of each hexagon cell
       </p>
 
@@ -51,8 +53,10 @@ const Controls = ({
           })}
         </div>
         <div className="flex">
-          <div className="flex-1 text-sm font-bold mt-1">Fewer Accidents</div>
-          <div className="flex-1 text-sm font-bold text-right mt-1">
+          <div className="flex-1 mt-1 text-xs font-bold lg:text-sm">
+            Fewer Accidents
+          </div>
+          <div className="flex-1 mt-1 text-xs font-bold text-right lg:text-sm">
             More Accidents
           </div>
         </div>
@@ -63,23 +67,23 @@ const Controls = ({
         <a
           href="https://data.gov.uk/"
           target="_blank"
-          className="text-blue-400 hover:text-blue-600"
+          className="text-sm text-blue-400 hover:text-blue-600 lg:text-md"
         >
           DATA.GOV.UK
         </a>
       </p>
 
-      <div className="mt-4">
-        <div className="font-medium text-4xl">
+      <div className="mt-2 lg:mt-4">
+        <div className="text-xl font-medium lg:text-4xl">
           {Math.round(accidentsTotal / 100) / 10}K
-          <span className="text-sm font-bold ml-2">accidents</span>
+          <span className="ml-2 text-sm font-bold">accidents</span>
         </div>
       </div>
 
-      <div className="mt-6">
-        <label className="flex align-middle relative">
+      <div className="mt-2 lg:mt-6">
+        <label className="flex relative align-middle">
           {showRadius && (
-            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+            <div className="absolute bottom-6 left-10 p-1 w-12 text-sm font-light text-center text-gray-50 bg-gray-900">
               {radius}
             </div>
           )}
@@ -91,18 +95,18 @@ const Controls = ({
             step="200"
             value={radius}
             onChange={handleRadiusChange}
-            onMouseEnter={() => setShowRadius(true)}
-            onMouseLeave={() => setShowRadius(false)}
+            onPointerEnter={() => setShowRadius(true)}
+            onPointerLeave={() => setShowRadius(false)}
           />
-          <div className="inline-block ml-2 font-medium text-gray-800">
+          <div className="inline-block ml-2 text-xs font-medium text-gray-800 lg:text-md">
             Radius
           </div>
         </label>
       </div>
-      <div className="mt-4">
-        <label className="flex align-middle relative">
+      <div className="mt-2 lg:mt-4">
+        <label className="flex relative align-middle">
           {showOpacity && (
-            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+            <div className="absolute bottom-6 left-10 p-1 w-12 text-sm font-light text-center text-gray-50 bg-gray-900">
               {opacity}
             </div>
           )}
@@ -114,18 +118,18 @@ const Controls = ({
             step="0.1"
             value={opacity}
             onChange={handleOpacityChange}
-            onMouseEnter={() => setShowOpacity(true)}
-            onMouseLeave={() => setShowOpacity(false)}
+            onPointerEnter={() => setShowOpacity(true)}
+            onPointerLeave={() => setShowOpacity(false)}
           />
-          <div className="inline-block ml-2 font-medium text-gray-800">
+          <div className="inline-block ml-2 text-xs font-medium text-gray-800 lg:text-md">
             Opacity
           </div>
         </label>
       </div>
-      <div className="mt-4">
-        <label className="flex align-middle relative">
+      <div className="mt-2 lg:mt-4">
+        <label className="flex relative align-middle">
           {showPercentile && (
-            <div className="bg-gray-900 text-gray-50 text-sm font-light p-1 absolute bottom-6 left-10 w-12 text-center">
+            <div className="absolute bottom-6 left-10 p-1 w-12 text-sm font-light text-center text-gray-50 bg-gray-900">
               {upperPercentile}
             </div>
           )}
@@ -137,10 +141,10 @@ const Controls = ({
             step="1"
             value={upperPercentile}
             onChange={handleUpperPercentileChange}
-            onMouseEnter={() => setShowPercentile(true)}
-            onMouseLeave={() => setShowPercentile(false)}
+            onPointerEnter={() => setShowPercentile(true)}
+            onPointerLeave={() => setShowPercentile(false)}
           />{" "}
-          <div className="inline-block ml-2 font-medium text-gray-800">
+          <div className="inline-block ml-2 text-xs font-medium text-gray-800 lg:text-md">
             Upper Percentile
           </div>
         </label>
